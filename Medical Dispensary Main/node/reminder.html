@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Reminders - Health Management App</title>
+    <link rel="stylesheet" href="assets/styles/style.css">
+    <link rel="stylesheet" href="assets/styles/reminder.css">
+</head>
+<body>
+    <div class="background-image"><img src="assets/images/medical.jpeg" alt="Medical Background"></div>
+
+    <header class="header">
+        <div class="logo-placeholder"><img src="assets/images/logo.png" alt="Logo"></div>
+        <h1>Medical Dispensary</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <h1>Set a Reminder</h1>
+        <form id="reminderForm" class="reminder-form">
+            <label for="task">Task</label>
+            <input type="text" id="task" name="task" placeholder="e.g., Take medication" required>
+
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="time">Time</label>
+            <input type="time" id="time" name="time" required>
+
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Add any additional notes..."></textarea>
+
+            <button type="button" class="btn-primary" onclick="setReminder()">Set Reminder</button>
+        </form>
+
+        <div id="reminderList" class="result-container">
+            <h3>Your Reminders</h3>
+            <!-- Reminder cards will appear here -->
+        </div>
+    </div>
+
+    <script>
+        // Function to set a reminder
+        function setReminder() {
+            const task = document.getElementById('task').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const notes = document.getElementById('notes').value;
+
+            fetch('/set-reminder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ task, date, time, notes })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message); // Show success message
+                    fetchReminders(); // Refresh the reminder list
+                } else {
+                    alert('Error setting reminder');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving reminder.');
+            });
+        }
+
+        // Function to fetch all reminders from the database
+        function fetchReminders() {
+            fetch('/get-reminders')
+                .then(response => response.json())
+                .then(data => {
+                    const reminderList = document.getElementById('reminderList');
+                    reminderList.innerHTML = ''; // Clear existing reminders
+                    
+                    if (data.success && data.reminders.length > 0) {
+                        data.reminders.forEach(reminder => {
+                            const reminderItem = document.createElement('div');
+                            reminderItem.classList.add('reminder-card');
+                            reminderItem.innerHTML = `
+                                <p><strong>Task:</strong> ${reminder.task}</p>
+                                <p><strong>Date:</strong> ${reminder.reminder_date}</p>
+                                <p><strong>Time:</strong> ${reminder.reminder_time}</p>
+                                <p><strong>Notes:</strong> ${reminder.notes || 'No notes'}</p>
+                                <p><small>Created: ${new Date(reminder.created_at).toLocaleString()}</small></p>
+                            `;
+                            reminderList.appendChild(reminderItem);
+                        });
+                    } else {
+                        reminderList.innerHTML = '<p>No reminders set yet.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching reminders.');
+                });
+        }
+
+        // Fetch reminders when the page loads
+        window.onload = fetchReminders;
+    </script>
+</body>
+</html>

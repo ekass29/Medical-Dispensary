@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker - Health Management App</title>
+    <link rel="stylesheet" href="assets/styles/style.css">
+    <link rel="stylesheet" href="assets/styles/symptom_checker.css">
+</head>
+<body>
+    <!-- Background Image -->
+    <div class="background-image"><img src="assets/images/medical.jpeg" alt="Medical"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-placeholder"><img src="assets/images/logo.png" alt="Logo"></div>
+        <h1>Medical Dispensary</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <h1>Symptom Checker</h1>
+        <h2>Select any 6 symptoms below:</h2>
+        <div class="symptom-diagnosis-container">
+            <!-- Symptoms on the left -->
+            <div class="symptom-container" id="symptom-container"></div> <!-- Symptom checkboxes will appear here -->
+
+            <!-- Diagnosis on the right -->
+            <div id="result-box" class="result-box">
+                <p>Your diagnosis will appear here.</p>
+            </div>
+        </div>
+        <button type="button" id="diagnose-button" class="btn-primary" onclick="checkSymptoms()">Diagnose</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Health Management App</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Define the symptoms array (updated with 50 new symptoms)
+        const symptoms = [
+            'Fever', 'Cough', 'Headache', 'Fatigue', 'Shortness of breath', 'Sore throat', 'Runny nose', 'Chest pain', 
+            'Dizziness', 'Nausea', 'Vomiting', 'Diarrhea', 'Chills', 'Loss of taste or smell', 'Muscle aches',
+            'Coughing up blood', 'Painful urination', 'Frequent urination', 'Abdominal pain', 'Rash', 'Joint pain', 
+            'Weight loss', 'Night sweats', 'Cold sweats', 'Swelling', 'Cough with mucus', 'Slight fever', 'Tiredness', 
+            'Difficulty breathing', 'Severe headache', 'Itchy throat', 'Loss of appetite', 'Blood in stool', 'Back pain',
+            'Tightness in chest', 'Dry skin', 'Paleness', 'Fatigue with exercise', 'Chest tightness', 'Nausea after eating',
+            'Trouble swallowing', 'Mild fever', 'Cramps', 'Feeling faint', 'Wheezing', 'Nosebleed', 'Bloody cough', 'Rash on face', 
+            'Leg pain', 'Abdominal bloating', 'Itchy skin', 'Numbness', 'Tingling in fingers', 'Excessive sweating',
+            'Cold hands', 'Blurred vision', 'Hiccups', 'Excessive thirst', 'Loss of coordination', 'Confusion', 
+            'Fainting', 'Abnormal heartbeat', 'Numbness in legs', 'Difficulty sleeping', 'Tremors', 'Stomach cramps', 
+            'Lightheadedness', 'Pain in the neck', 'Dry mouth', 'Heart palpitations'
+        ];
+
+        // Function to dynamically generate symptom checkboxes
+        function generateSymptomCheckboxes() {
+            const container = document.getElementById('symptom-container');
+            symptoms.forEach(symptom => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" name="symptom" value="${symptom}"> ${symptom}`;
+                container.appendChild(label);
+                container.appendChild(document.createElement('br'));
+            });
+        }
+
+        // Function to handle the "Diagnose" button click
+        function checkSymptoms() {
+            const selectedSymptoms = Array.from(
+                document.querySelectorAll('input[name="symptom"]:checked')
+            ).map(input => input.value);
+
+            // Check if more than 6 symptoms are selected
+            if (selectedSymptoms.length > 6) {
+                alert("You can only select up to 6 symptoms.");
+                return;  // Prevent further execution
+            }
+
+            // Send the selected symptoms as an array (directly)
+            fetch('/api/diagnose', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(selectedSymptoms)  // Send directly as array
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result-box').innerHTML = ` 
+                    <h3>Diagnosis: ${data.disease}</h3>
+                    <p>Common Symptoms: ${data.commonSymptoms}</p>
+                    <p>Cure: ${data.cure}</p>
+                    <p>Doctor Type: ${data.doctorType}</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Initialize the symptom checkboxes when the page loads
+        window.onload = generateSymptomCheckboxes;
+    </script>
+</body>
+</html>

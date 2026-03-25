@@ -1,0 +1,147 @@
+:root {
+    --base-color: #00264e; /* Deep Blue */
+    --secondary-color: #0099cc; /* Light Blue */
+    --text-color: #333;
+    --background-color: #f4f4f4;
+    --button-hover-color: #0056b3;
+    --button-active-color: #004494;
+    --card-background: #ffffff;
+    --border-color: #ddd;
+    --error-color: #f44336;
+    --font-family: 'Arial', sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header {
+    background-color: var(--base-color);
+    color: white;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    height: var(--header-height);
+}
+/* Header logo container */
+.header .logo-placeholder {
+    width: 50px; /* Set width for the logo container */
+    height: 50px; /* Set height for the logo container */
+    background-color: white;
+    border-radius: 50%; /* Makes it circular */
+    margin-right: 15px;
+    display: flex;
+    justify-content: center; /* Center the logo horizontally */
+    align-items: center; /* Center the logo vertically */
+    overflow: hidden; /* Ensures the image doesn't overflow the circle */
+}
+
+/* Logo image */
+.header .logo-placeholder img {
+    width: 100%; /* Scale the image to fill the container */
+    height: 100%; /* Scale the image to fill the container */
+    object-fit: contain; /* Ensures the image maintains its aspect ratio while fitting inside the circle */
+}
+
+
+.header h1 {
+    font-size: 24px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.header nav {
+    margin-left: auto;
+}
+
+.header nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 16px;
+    transition: color 0.3s;
+    padding: 5px 0;
+}
+
+.header nav a:hover {
+    color: var(--secondary-color);
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.main-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: var(--base-color);
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.menu-button {
+    padding: 15px;
+    font-size: 18px;
+    color: white;
+    background-color: var(--base-color);
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.menu-button:hover {
+    background-color: var(--button-hover-color);
+}
+
+.menu-button:active {
+    background-color: var(--button-active-color);
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: var(--base-color);
+    color: white;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Background image container styles */
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.background-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+}
